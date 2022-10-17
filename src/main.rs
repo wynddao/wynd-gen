@@ -4,7 +4,7 @@ use bip32::DerivationPath;
 use bip39::Mnemonic;
 use cosmrs::crypto::secp256k1::SigningKey;
 
-const DESIRED: &str = "wy";
+const DESIRED: &str = "wynd";
 const CHAIN: &str = "juno";
 const WORD_COUNT: usize = 12;
 
