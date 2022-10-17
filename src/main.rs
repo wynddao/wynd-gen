@@ -27,7 +27,7 @@ fn main() {
     let mut mnemonic = get_mnemonic();
     let cut = CHAIN.len() + 1;
     loop {
-        if i % 1000 == 0 {
+        if i % 2000 == 0 {
             println!("Tried {}", i);
         }
 
