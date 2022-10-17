@@ -3,15 +3,13 @@ use std::str::FromStr;
 use bip32::DerivationPath;
 use bip39::Mnemonic;
 use cosmrs::crypto::secp256k1::SigningKey;
-use rand_core::{OsRng, RngCore};
 
 const DESIRED: &str = "wy";
 const CHAIN: &str = "juno";
+const WORD_COUNT: usize = 12;
 
-fn get_seed() -> [u8;32] {
-    let mut res = [0u8;32];
-    OsRng.fill_bytes(&mut res);
-    res
+fn get_mnemonic() -> Mnemonic {
+    Mnemonic::generate(WORD_COUNT).unwrap()
 }
 
 fn calc_address(seed: &[u8], path: &DerivationPath) -> String {
@@ -26,23 +24,22 @@ fn main() {
     println!("Estimating {} tries...", expected_runs);
 
     let mut i = 1;
-    let mut seed = get_seed();
+    let mut mnemonic = get_mnemonic();
     let cut = CHAIN.len() + 1;
     loop {
         if i % 1000 == 0 {
             println!("Tried {}", i);
         }
 
-        let addr = calc_address(&seed, &path);
+        let addr = calc_address(&mnemonic.to_seed(""), &path);
         if addr[cut..].starts_with(DESIRED) {
             println!("Got a match: {}", addr);
-            let phrase = Mnemonic::from_entropy(&seed).unwrap();
-            println!("Mnemonic: {}", phrase);
+            println!("Mnemonic: {}", mnemonic);
             return
         }
 
         // update for next rounds
-        seed = get_seed();
+        mnemonic = get_mnemonic();
         i+=1;
     }
 }
